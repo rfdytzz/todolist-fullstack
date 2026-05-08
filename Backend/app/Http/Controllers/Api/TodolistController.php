@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class TodolistController extends Controller
 {
     public function index() {
-        $data = Todolist::all();
+        $data = Todolist::latest()->get();
 
         return response()->json([
             'data' => $data
@@ -20,7 +20,7 @@ class TodolistController extends Controller
         $validated = $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'status' => 'required'
+            'status' => 'nullable'
         ]);
 
         $data = Todolist::create($validated);
