@@ -1,6 +1,6 @@
 <script setup>
 import Navbar from '@/components/Navbar.vue'
-import axios from 'axios'
+import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
 const data = ref([])
@@ -9,15 +9,15 @@ const getData = async () => {
     try {
         const res = await axios.get('http://127.0.0.1:8000/api/todolist')
         data.value = res.data.data
-    } catch (error) {
-        console.log('API Error:', error)
+    } catch(error) {
+        console.log(error)
     }
 }
 
 onMounted( () => {
     getData()
+    document.title = 'Todolist'
 })
-
 </script>
 
 <template>
@@ -41,8 +41,8 @@ onMounted( () => {
                             <th class="p-3 text-start">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="hover:bg-gray-200 transition duration-100">
-                        <tr v-for="(item, index) in data" :key="item.id">
+                    <tbody>
+                        <tr v-for="(item, index) in data" :key="item.id" class="hover:bg-gray-200 transition duration-100">
                             <td class="p-3 text-start font-medium">{{ index + 1 }}</td>
                             <td class="p-3 text-start font-medium">{{ item.title }}</td>
                             <td class="p-3 text-start">{{ item.description }}</td>
