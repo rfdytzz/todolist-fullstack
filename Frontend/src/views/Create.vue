@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router';
 
 const title = ref('')
 const description = ref('')
-const router =useRouter()
+const router = useRouter()
 
 const createTodo = async () => {
     await axios.post('http://127.0.0.1:8000/api/todolist',

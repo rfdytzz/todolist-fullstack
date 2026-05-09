@@ -3,11 +3,11 @@ import Navbar from '@/components/Navbar.vue'
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 
-const data = ref([])
+const data = ref([]);
 
 const getData = async () => {
     try {
-        const res = await axios.get('http://127.0.0.1:8000/api/todolist')
+        const res = await axios.get('http//localhost:8000/api/todolist')
         data.value = res.data.data
     } catch (error) {
         console.log(error)
@@ -16,9 +16,7 @@ const getData = async () => {
 
 onMounted( () => {
     getData()
-    document.title = 'Todolist'
 })
-
 </script>
 
 <template>
