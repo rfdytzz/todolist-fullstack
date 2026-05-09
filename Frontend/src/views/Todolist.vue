@@ -14,6 +14,20 @@ const getData = async () => {
     }
 }
 
+const deleteTodo = async (id) => {
+    const confirmDelete = confirm('sure to delete?')
+
+    if (!confirmDelete) return
+
+    try {
+        await axios.delete(`http://localhost:8000/api/todolist/${id}`)
+        alert('data successfully deleted')
+        getData()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 onMounted( () => {
     getData()
 })
@@ -53,10 +67,13 @@ onMounted( () => {
                                 <p class="text-yellow-700 text-[13px]">{{ item.status }}</p>
                             </div>
                         </td>
-                        <td class="p-3 text-start">
+                        <td class="p-3 text-start flex gap-3">
                             <router-link :to="`/todolist/edit/${item.id}`" class="flex justify-center p-2 rounded w-fit text-green-700 bg-green-500/20 border-2 border-green-500">
                                 <i class='bx bxs-edit'></i>
                             </router-link>
+                            <button @click="deleteTodo(item.id)" class="flex justify-center p-2 rounded w-fit text-red-700 bg-red-500/20 border-2 border-red-500">
+                                <i class='bx bxs-trash'></i>
+                            </button>
                         </td>
                     </tr>
                 </tbody>
