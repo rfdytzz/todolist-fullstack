@@ -7,7 +7,7 @@ const data = ref([]);
 
 const getData = async () => {
     try {
-        const res = await axios.get('http//localhost:8000/api/todolist')
+        const res = await axios.get('http://localhost:8000/api/todolist')
         data.value = res.data.data
     } catch (error) {
         console.log(error)
@@ -54,9 +54,9 @@ onMounted( () => {
                             </div>
                         </td>
                         <td class="p-3 text-start">
-                            <div class="flex justify-center p-2 rounded w-fit text-green-700 bg-green-500/20 border-2 border-green-500">
+                            <router-link :to="`/todolist/edit/${item.id}`" class="flex justify-center p-2 rounded w-fit text-green-700 bg-green-500/20 border-2 border-green-500">
                                 <i class='bx bxs-edit'></i>
-                            </div>
+                            </router-link>
                         </td>
                     </tr>
                 </tbody>

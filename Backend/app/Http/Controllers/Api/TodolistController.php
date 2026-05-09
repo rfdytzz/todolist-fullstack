@@ -43,7 +43,7 @@ class TodolistController extends Controller
         $validated = $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'status' => 'required'
+            'status' => 'nullable'
         ]);
 
         $data = Todolist::findOrFail($id);
