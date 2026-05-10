@@ -8,8 +8,15 @@ use Illuminate\Http\Request;
 
 class TodolistController extends Controller
 {
-    public function index() {
-        $data = Todolist::latest()->get();
+    public function index(Request $request) {
+        $query = Todolist::query();
+
+        if($request->search) {
+            $query->where('title', 'like', '%' . $request->search . '%')
+                    ->orWhere('status', 'like', '%' . $request->search . '%');
+        }
+
+        $data = $query->latest()->get();
 
         return response()->json([
             'data' => $data
