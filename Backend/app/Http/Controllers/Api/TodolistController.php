@@ -41,8 +41,8 @@ class TodolistController extends Controller
 
     public function update(Request $request, $id) {
         $validated = $request->validate([
-            'title' => 'required',
-            'description' => 'required',
+            'title' => 'nullable',
+            'description' => 'nullable',
             'status' => 'nullable'
         ]);
 

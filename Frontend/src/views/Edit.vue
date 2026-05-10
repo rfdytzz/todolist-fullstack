@@ -1,8 +1,8 @@
 <script setup>
 import Navbar from '@/components/Navbar.vue'
-import axios from 'axios'
-import { onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import axios from 'axios';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
 const router = useRouter()
@@ -22,23 +22,22 @@ const getTodo = async () => {
 
 const loading = ref(false)
 
-const updateTodo = async () => {
-  loading.value = true
+const updateTodo = async (id) => {
   try {
-    const res = await axios.put(`http://localhost:8000/api/todolist/${route.params.id}`, {
-      title: title.value,
-      description: description.value,
-    })
-
-    console.log(res)
-
+    await axios.put(`http://localhost:8000/api/todolist/${route.params.id}`, 
+      {
+        title: title.value,
+        description: description.value
+      }
+    )
     router.push('/todolist')
+    loading.value = true
   } catch (error) {
     console.log(error)
   }
 }
 
-onMounted(() => {
+onMounted( () => {
   getTodo()
 })
 </script>

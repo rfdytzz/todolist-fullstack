@@ -14,6 +14,19 @@ const getData = async () => {
     }
 }
 
+const doneTodo = async (id) => {
+    try {
+        await axios.put(`http://localhost:8000/api/todolist/${id}`,
+            {
+                status: 'done'
+            }
+        )
+        getData()
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const deleteTodo = async (id) => {
     const confirmDelete = confirm('sure to delete?')
 
@@ -46,7 +59,7 @@ onMounted( () => {
         <div class="flex justify-center justify-center">
             <router-link class="bg-blue-500 text-white flex-1 justify-center flex py-3 rounded" to="/todolist/create">Create Todolist</router-link>
         </div>
-        <div class="bg-gray-300">
+        <div class="bg-gray-300 overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gray-900 text-white">
                     <tr>
@@ -63,11 +76,17 @@ onMounted( () => {
                         <td class="p-3 text-start font-medium">{{ item.title }}</td>
                         <td class="p-3 text-start">{{ item.description }}</td>
                         <td class="p-3 text-start font-medium pr-10">
-                            <div class="flex justify-center p-1 rounded-2xl bg-yellow-500/20 border-2 border-yellow-500">
+                            <div v-if="status == 'pending'" class="flex justify-center p-1 rounded-2xl bg-yellow-500/20 border-2 border-yellow-500">
                                 <p class="text-yellow-700 text-[13px]">{{ item.status }}</p>
+                            </div>
+                            <div v-else class="flex justify-center p-1 rounded-2xl bg-green-500/20 border-2 border-green-500">
+                                <p class="text-green-700 text-[13px]">{{ item.status }}</p>
                             </div>
                         </td>
                         <td class="p-3 text-start flex gap-3">
+                            <button type="submit" @click="doneTodo(item.id)" class="flex justify-center p-2 rounded w-fit text-yellow-700 bg-yellow-500/20 border-2 border-yellow-500">
+                                <i class='bx bx-check-circle'></i>
+                            </button>
                             <router-link :to="`/todolist/edit/${item.id}`" class="flex justify-center p-2 rounded w-fit text-green-700 bg-green-500/20 border-2 border-green-500">
                                 <i class='bx bxs-edit'></i>
                             </router-link>
