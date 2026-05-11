@@ -8,12 +8,14 @@ const search = ref('')
 
 const getData = async () => {
     try {
-        const res = await axios.get(`http://localhost:8000/api/todolist?search=${search.value}`)
+        const res = await axios.get('http://localhost:8000/api/todolist')
         data.value = res.data.data
     } catch (error) {
         console.log(error)
     }
 }
+
+const selectedDate = ref(new Date().toISOString().split('T')[0])
 
 const doneTodo = async (id) => {
     try {
@@ -29,13 +31,10 @@ const doneTodo = async (id) => {
 }
 
 const deleteTodo = async (id) => {
-    const confirmDelete = confirm('sure to delete?')
-
+    const confirmDelete = confirm('sure to delete ?')
     if (!confirmDelete) return
-
     try {
         await axios.delete(`http://localhost:8000/api/todolist/${id}`)
-        alert('data successfully deleted')
         getData()
     } catch (error) {
         console.log(error)
@@ -57,6 +56,7 @@ onMounted( () => {
                 <i class='bx bx-search text-[25px]'></i>
             </div>
         </div>
+        <input type="date" v-model="selectedDate" @input="getData()" class="focus:outline-blue-500 bg-gray-100 flex-1 p-3 rounded focus:bg-gray-50 shadow focus:shadow-xl transition duration-200 outline-1" placeholder="search" name="" id="">
         <div class="flex justify-center justify-center">
             <router-link class="bg-blue-500 text-white flex-1 justify-center flex py-3 rounded" to="/todolist/create">Create Todolist</router-link>
         </div>
@@ -72,32 +72,32 @@ onMounted( () => {
                         <th class="p-3 text-start">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr v-for="(item, index) in data" :key="item.id" class="hover:bg-slate-200 transition border-b-1 border-gray-200 duration-100">
-                        <td class="p-3 text-start font-medium">{{ index + 1 }}</td>
-                        <td class="p-3 text-start font-medium">{{ item.title }}</td>
-                        <td class="p-3 text-start">{{ item.description }}</td>
-                        <td class="p-3 text-start">{{ new Date(item.updated_at).toLocaleString() }}</td>
-                        <td class="p-3 text-start font-medium pr-10">
-                            <div v-if="item.status == 'pending'" class="flex justify-center p-1 rounded-2xl bg-yellow-500/20 border-2 border-yellow-500">
-                                <p class="text-yellow-700 text-[13px]">{{ item.status }}</p>
-                            </div>
-                            <div v-else class="flex justify-center p-1 rounded-2xl bg-green-500/20 border-2 border-green-500">
+                <tbody v-for="(item, index) in data.filter(i => i.created_at.includes(selectedDate) && i.title.toLowerCase().includes(search.toLowerCase()))" :key="item.id">
+                    <tr class="hover:bg-slate-200 transition border-b-1 border-gray-200 duration-100">
+                            <td class="p-3 text-start font-m    edium">{{ index + 1 }}</td>
+                            <td class="p-3 text-start font-medium">{{ item.title }}</td>
+                            <td class="p-3 text-start">{{ item.description }}</td>
+                            <td class="p-3 text-start">{{ new Date(item.updated_at).toDateString() }}</td>
+                            <td class="p-3 text-start font-medium pr-10">
+                                <div v-if="item.status == 'pending'" class="flex justify-center p-1 rounded-2xl bg-yellow-500/20 border-2 border-yellow-500">
+                                    <p class="text-yellow-700 text-[13px]">{{ item.status }}</p>
+                                </div>
+                                <div v-else class="flex justify-center p-1 rounded-2xl bg-green-500/20 border-2 border-green-500">
                                 <p class="text-green-700 text-[13px]">{{ item.status }}</p>
-                            </div>
-                        </td>
-                        <td class="p-3 text-start flex gap-3">
-                            <button v-if="item.status == 'pending'" type="submit" @click="doneTodo(item.id)" class="flex justify-center p-2 rounded w-fit text-yellow-700 bg-yellow-500/20 border-2 border-yellow-500">
-                                <i class='bx bx-check-circle'></i>
-                            </button>
-                            <router-link :to="`/todolist/edit/${item.id}`" class="flex justify-center p-2 rounded w-fit text-green-700 bg-green-500/20 border-2 border-green-500">
-                                <i class='bx bxs-edit'></i>
-                            </router-link>
-                            <button @click="deleteTodo(item.id)" class="flex justify-center p-2 rounded w-fit text-red-700 bg-red-500/20 border-2 border-red-500">
-                                <i class='bx bxs-trash'></i>
-                            </button>
-                        </td>
-                    </tr>
+                                </div>
+                            </td>
+                            <td class="p-3 text-start flex gap-3">
+                                <button v-if="item.status == 'pending'" type="submit" @click="doneTodo(item.id)" class="flex justify-center p-2 rounded w-fit text-yellow-700 bg-yellow-500/20 border-2 border-yellow-500">
+                                    <i class='bx bx-check-circle'></i>
+                                </button>
+                                <router-link :to="`/todolist/edit/${item.id}`" class="flex justify-center p-2 rounded w-fit text-green-700 bg-green-500/20 border-2 border-green-500">
+                                    <i class='bx bxs-edit'></i>
+                                </router-link>
+                                <button @click="deleteTodo(item.id)" class="flex justify-center p-2 rounded w-fit text-red-700 bg-red-500/20 border-2 border-red-500">
+                                    <i class='bx bxs-trash'></i>
+                                </button>
+                            </td>
+                        </tr>
                 </tbody>
             </table>
         </div>
